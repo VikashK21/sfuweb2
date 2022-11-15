@@ -1,0 +1,23 @@
+Working on Server side...
+
+functionality caring:
+    Mic --> 
+    Video
+    Fullscreen
+    Chat
+    Sharing media speed
+    Also screen sharing
+
+APIs creation:
+    consumer-resume --> done
+    disconnect --> done
+    New-producer --> done
+    producer-closed --> done
+    consume --> done
+    createWebRtcTransport --> done
+    transport-recv-connect --> done
+    getProducers --> done
+    transport-connect --> done
+    transport-produce --> done
+    joinRoom --> done
+    connection-success --> done
