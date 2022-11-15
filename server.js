@@ -168,7 +168,7 @@ connection.on("connection", async (socket) => {
         const webRTcTransport_options = {
           listenIps: [{ 
             ip: "127.0.0.1",
-          //  announcedIp: "127.0.0.1"
+           announcedIp: "127.0.0.1"
            }],
           enableUdp: true,
           enableTcp: true,
