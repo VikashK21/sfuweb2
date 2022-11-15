@@ -166,7 +166,10 @@ connection.on("connection", async (socket) => {
     return new Promise(async (res, rej) => {
       try {
         const webRTcTransport_options = {
-          listenIps: [{ ip: "127.0.0.1", announcedIp: "127.0.0.1" }],
+          listenIps: [{ 
+            ip: "127.0.0.1",
+          //  announcedIp: "127.0.0.1"
+           }],
           enableUdp: true,
           enableTcp: true,
           preferUdp: true,
