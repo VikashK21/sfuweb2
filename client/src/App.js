@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
+// eslint-disable-next-line
 import mediasoupClient, { Device } from "mediasoup-client";
 
 import "./App.css";
 import RemoteStream from "./Components/RemoteStream";
+import Chat from "./Components/Chat";
 
 const roomName = window.location.pathname;
 const url = "/mediasoup";
@@ -33,8 +35,11 @@ let params = {
 };
 
 function App() {
+  const [selectedVid, setSelectedVid] = useState(null);
   const localVideo = useRef();
   const socket = useRef();
+  const [mic, setMic] = useState(true);
+  const [camera, setCamera] = useState(true);
 
   let audioParams = {};
   let videoParams = { params };
@@ -45,6 +50,7 @@ function App() {
   let consumerTransports = [];
   let audioProducer;
   let videoProducer;
+  // eslint-disable-next-line
   let consumer;
   let producerTransport;
   let rtpCapabilities;
@@ -96,8 +102,36 @@ function App() {
           for (let see of pre) {
             if (see[0] === remoteProducerId) return (allow = false);
           }
+
+          const videoF = (params, consumer) => (
+            <RemoteStream
+              frameStyle={{}}
+              videoStyle={{
+                zIndex: -1,
+                position: "fixed",
+                bottom: 0,
+                minWidth: "100%",
+                minHeight: "100%",
+                backgroundColor: "orange",
+              }}
+              params={params}
+              consumer={consumer}
+            />
+          );
+
+          const bringToW = (params, consumer, t = false) => {
+            if (t && pre.length === 1) {
+              const sl = videoF(params, consumer);
+              setSelectedVid(sl);
+            } else {
+              const sl = videoF(params, consumer);
+              setSelectedVid(sl);
+            }
+          };
+
           const video = (
             <RemoteStream
+              bringToW={bringToW}
               frameStyle={{
                 width: 120,
                 borderColor: "orange 2px solid",
@@ -114,6 +148,12 @@ function App() {
               consumer={consumer}
             />
           );
+
+          if (!selectedVid) {
+            const sl = videoF(params, consumer);
+            console.log("the setling of first video");
+            setSelectedVid(() => sl);
+          }
 
           if (allow) return [...pre, [remoteProducerId, video]];
           return [...pre];
@@ -394,10 +434,33 @@ function App() {
       .then(streamSuccess)
       .catch((err) => console.log(err.message));
   };
+
+  const mutemic = (e) => {
+    const stream = localVideo.current.srcObject
+      .getTracks()
+      .filter((track) => track.kind === "audio");
+    setMic((pre) => {
+      if (stream) stream[0].enabled = !pre;
+      return !pre;
+    });
+  };
+
+  const mutecamera = (e) => {
+    const stream = localVideo.current.srcObject
+      .getTracks()
+      .filter((track) => track.kind === "video");
+    setCamera((pre) => {
+      if (stream) stream[0].enabled = !pre;
+      return !pre;
+    });
+  };
+
   useEffect(() => {
     socket.current = io.connect(url, {
       path: "/io/webrtc",
     });
+
+    // console.log(selectedVid.current.srcObject, "the selected vid");
 
     socket.current.on("connection-success", ({ socketId }) => {
       console.log(socketId, "say I am there....");
@@ -430,6 +493,7 @@ function App() {
       setRemoteVideos(
         remoteVideos.filter((videoData) => videoData[0] !== remoteProducerId),
       );
+      console.log("removed or just sitting here....");
     });
   }, []);
 
@@ -438,7 +502,7 @@ function App() {
       <div
         style={{
           width: 200,
-          float: "left",
+          float: "right",
           margin: 5,
           borderRadius: 5,
           backgroundColor: "black",
@@ -447,13 +511,52 @@ function App() {
         <video
           style={{ width: 200 }}
           ref={localVideo}
-          muted={false}
+          muted={true}
           autoPlay
         ></video>
+        <div>
+          <i
+            onClick={mutemic}
+            style={{
+              cursor: "pointer",
+              padding: 5,
+              fontSize: 20,
+              color: (mic && "white") || "red",
+            }}
+            class="material-icons"
+          >
+            {(mic && "mic") || "mic_off"}
+          </i>
+          <i
+            onClick={mutecamera}
+            style={{
+              cursor: "pointer",
+              padding: 5,
+              fontSize: 20,
+              color: (camera && "white") || "red",
+            }}
+            class="material-icons"
+          >
+            {(camera && "videocam") || "videocam_off"}
+          </i>
+        </div>
       </div>
       <div
         style={{
-          zIndex: 3,
+          zIndex: -1,
+          position: "fixed",
+          bottom: 0,
+          minWidth: "100%",
+          minHeight: "100%",
+          backgroundColor: "orange",
+        }}
+      >
+        vikash kumar
+        {selectedVid && selectedVid}
+      </div>
+      <div
+        style={{
+          // zIndex: 1,
           position: "fixed",
           padding: "6px 3px",
           backgroundColor: "rgba(0,0,0,0.3)",
@@ -468,6 +571,27 @@ function App() {
       >
         {remoteVideos.length > 0 && remoteVideos.map((videoCre) => videoCre[1])}
       </div>
+
+      <br />
+
+      {/* <Chat
+        user={{
+          uid: (socket.current && socket.current.id) || "",
+        }}
+        // messages={this.state.messages}f
+        // sendMessage={(message) => {
+        //   this.setState((prevState) => {
+        //     return { messages: [...prevState.messages, message] };
+        //   });
+        //   this.state.sendChannels.map((sendChannel) => {
+        //     sendChannel.readyState === "open" &&
+        //       sendChannel.send(JSON.stringify(message));
+        //   });
+        //   this.sendToPeer("new-message", JSON.stringify(message), {
+        //     local: this.socket.id,
+        //   });
+        // }}
+      /> */}
     </div>
   );
 }

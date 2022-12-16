@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const https = require("https");
 const fs = require("fs");
+const os = require("os");
+const ifaces = os.networkInterfaces();
 
 const mediasoup = require("mediasoup");
 
@@ -35,9 +37,9 @@ const options = {
   passphrase: "gsahdg",
 };
 
-const httpsServer = https.createServer(options, app);
+// const httpsServer = https.createServer(options, app);
 
-httpsServer.listen(PORT, () =>
+const httpsServer = app.listen(PORT, () =>
   console.log(`Example app listening on port ${PORT}!`),
 );
 
@@ -64,8 +66,8 @@ let consumers = []; // [ { socketId1, roomName1, consumer, }, ... ]
 
 const createWorker = async () => {
   worker = await mediasoup.createWorker({
-    rtcMinPort: 2000,
-    rtcMaxPort: 2900,
+    rtcMinPort: 20000,
+    rtcMaxPort: 29000,
   });
   console.log(`worker pid ${worker.pid}`);
 
@@ -102,6 +104,23 @@ const mediaCodecs = [
     },
   },
 ];
+
+const getLocalIp = () => {
+  let localIp = "127.0.0.1";
+  Object.keys(ifaces).forEach((ifname) => {
+    for (const iface of ifaces[ifname]) {
+      // Ignore IPv6 and 127.0.0.1
+      console.log(iface, "the address related...");
+      if (iface.family !== "IPv4" || iface.internal !== false) {
+        continue;
+      }
+      // Set the local ip to the first IPv4 address found and exit the loop
+      localIp = iface.address;
+      return;
+    }
+  });
+  return localIp;
+};
 
 connection.on("connection", async (socket) => {
   console.log(socket.id, "person's id");
@@ -166,10 +185,13 @@ connection.on("connection", async (socket) => {
     return new Promise(async (res, rej) => {
       try {
         const webRTcTransport_options = {
-          listenIps: [{ 
-            ip: "127.0.0.1",
-           announcedIp: "127.0.0.1"
-           }],
+          listenIps: [
+            {
+              ip: "0.0.0.0",
+              announcedIp: getLocalIp(), // replace by public IP address.
+            },
+          ],
+          stunServer: [{ urls: "stun:stun.l.google.com:19302" }],
           enableUdp: true,
           enableTcp: true,
           preferUdp: true,
@@ -202,6 +224,7 @@ connection.on("connection", async (socket) => {
 
   const addTransport = (transport, roomName, consumer) => {
     try {
+      debugger;
       transports = [
         ...transports,
         { socketId: socket.id, transport, roomName, consumer },
@@ -252,6 +275,7 @@ connection.on("connection", async (socket) => {
   // >>>>>>>>>>>
   const getTransport = (socketId) => {
     try {
+      debugger;
       const [producerTransport] = transports.filter(
         (transport) => transport.socketId === socketId && !transport.consumer,
       );
@@ -523,7 +547,7 @@ connection.on("connection", async (socket) => {
         ),
       };
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   });
 });
