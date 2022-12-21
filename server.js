@@ -43,6 +43,10 @@ const httpsServer = app.listen(PORT, () =>
   console.log(`Example app listening on port ${PORT}!`),
 );
 
+// httpsServer.listen(PORT, () =>
+//   console.log(`Example app listening on port ${PORT}!`),
+// );
+
 io.listen(httpsServer);
 
 // socket.io namespace (could represent a room?)
@@ -185,6 +189,7 @@ connection.on("connection", async (socket) => {
     return new Promise(async (res, rej) => {
       try {
         const webRTcTransport_options = {
+          listenIp: "0.0.0.0",
           listenIps: [
             {
               ip: "0.0.0.0",
