@@ -67,6 +67,7 @@ const Chat = (props) => {
             cursor: "pointer",
           }}
           src={message.data}
+          alt=""
         />
       </div>
     );
@@ -90,6 +91,7 @@ const Chat = (props) => {
           borderRadius: 20,
         }}
         onClick={() => setImageZoom(false)}
+        alt=""
       />
     );
   };
