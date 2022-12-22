@@ -4,6 +4,7 @@ const https = require("https");
 const fs = require("fs");
 const os = require("os");
 const ifaces = os.networkInterfaces();
+const cors = require("cors");
 
 const mediasoup = require("mediasoup");
 
@@ -18,6 +19,7 @@ const PORT = process.env.PORT || 8888;
 
 //https://expressjs.com/en/guide/writing-middleware.html
 // console.log(path.join(__dirname, "../client/build/index.html"));
+app.use(cors());
 app.use(express.static(path.join(__dirname, "/client/build")));
 // app.use(express.static(path.join(__dirname, "../client/public")));
 // app.use(express.static())
