@@ -21,13 +21,13 @@ const PORT = process.env.PORT || 8888;
 app.use(express.static(path.join(__dirname, "/client/build")));
 // app.use(express.static(path.join(__dirname, "../client/public")));
 // app.use(express.static())
-app.get("/", (req, res, next) => {
+app.get("/meetclub", (req, res, next) => {
   //default room
   // /home/vikash/Desktop/BASK/bb_video_call/client/build/index.html
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 
-app.get("/:room", (req, res, next) => {
+app.get("/meetclub/:room", (req, res, next) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 
