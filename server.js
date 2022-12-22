@@ -13,7 +13,7 @@ const io = require("socket.io")({
 });
 
 const app = express();
-const PORT = process.env.PORT || 8888;
+const PORT = process.env.PORT || 3001;
 
 // app.get('/', (req, res) => res.send('Hello World!!!!!'))
 
@@ -77,8 +77,8 @@ let consumers = []; // [ { socketId1, roomName1, consumer, }, ... ]
 
 const createWorker = async () => {
   worker = await mediasoup.createWorker({
-    rtcMinPort: 20000,
-    rtcMaxPort: 29000,
+    rtcMinPort: 40000,
+    rtcMaxPort: 49999,
   });
   console.log(`worker pid ${worker.pid}`);
 
@@ -117,7 +117,7 @@ const mediaCodecs = [
 ];
 
 const getLocalIp = () => {
-  let localIp = "127.0.0.1";
+  let localIp = "52.87.191.26";
   Object.keys(ifaces).forEach((ifname) => {
     for (const iface of ifaces[ifname]) {
       // Ignore IPv6 and 127.0.0.1
@@ -196,10 +196,11 @@ connection.on("connection", async (socket) => {
     return new Promise(async (res, rej) => {
       try {
         const webRTcTransport_options = {
+          listenPort: 3001,
           listenIps: [
             {
-              ip: "52.87.191.26",
-              announcedIp: getLocalIp(), // replace by public IP address.
+              ip: "0.0.0.0",
+              announcedIp: "52.87.191.26" || getLocalIp(), // replace by public IP address.
             },
           ],
           stunServer: [{ urls: "stun:stun.l.google.com:19302" }],
