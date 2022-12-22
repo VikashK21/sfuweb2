@@ -20,10 +20,11 @@ const PORT = process.env.PORT || 8888;
 //https://expressjs.com/en/guide/writing-middleware.html
 // console.log(path.join(__dirname, "../client/build/index.html"));
 app.use(cors());
-app.use(express.static(path.join(__dirname, "/client/build")));
+// app.use(express.static(path.join(__dirname, "/client/build")));
 // app.use(express.static(path.join(__dirname, "../client/public")));
 // app.use(express.static())
 app.get("/meetclub", (req, res, next) => {
+  app.use(express.static(path.join(__dirname, "/client/build")));
   //default room
   // /home/vikash/Desktop/BASK/bb_video_call/client/build/index.html
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
