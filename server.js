@@ -196,10 +196,9 @@ connection.on("connection", async (socket) => {
     return new Promise(async (res, rej) => {
       try {
         const webRTcTransport_options = {
-          listenIp: "0.0.0.0",
           listenIps: [
             {
-              ip: "0.0.0.0",
+              ip: "52.87.191.26",
               announcedIp: getLocalIp(), // replace by public IP address.
             },
           ],
