@@ -34,6 +34,10 @@ app.get("/:room", (req, res, next) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 
+app.get("/meetinclub", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "/client/build/index.html"));
+});
+
 const options = {
   key: fs.readFileSync("./ssl/keytmp.pem", "utf-8"),
   cert: fs.readFileSync("./ssl/cert.pem", "utf-8"),
