@@ -80,7 +80,19 @@ const createWorker = async () => {
     rtcMinPort: 40000,
     rtcMaxPort: 49999,
     logLevel: "debug",
-    logTags: ["ice", "dtls"],
+    logTags: [
+      "info",
+      "ice",
+      "dtls",
+      "rtp",
+      "srtp",
+      "rtcp",
+      // 'rtx',
+      // 'bwe',
+      // 'score',
+      // 'simulcast',
+      // 'svc'
+    ],
   });
   console.log(`worker pid ${worker.pid}`);
 
@@ -199,11 +211,17 @@ connection.on("connection", async (socket) => {
       try {
         const webRTcTransport_options = {
           listenIps: [
+            // {
+            //   ip: "0.0.0.0",
+            //   announcedIp: getLocalIp(), // replace by public IP address.
+            // },
             {
-              ip: "0.0.0.0",
-              announcedIp: getLocalIp(), // replace by public IP address.
+              ip: "52.87.191.26",
+              announcedIp: null,
             },
           ],
+          initialAvailableOutgoingBitrate: 1000000,
+          minimumAvailableOutgoingBitrate: 600000,
           stunServer: [{ urls: "stun:stun.l.google.com:19302" }],
           enableUdp: true,
           enableTcp: true,
