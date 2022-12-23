@@ -131,20 +131,44 @@ const mediaCodecs = [
 ];
 
 const getLocalIp = () => {
-  let localIp = "127.0.0.1";
-  Object.keys(ifaces).forEach((ifname) => {
-    for (const iface of ifaces[ifname]) {
-      // Ignore IPv6 and 127.0.0.1
-      console.log(iface, "the address related...");
-      if (iface.family !== "IPv4" || iface.internal !== false) {
-        continue;
+  // let localIp = "127.0.0.1";
+  // Object.keys(ifaces).forEach((ifname) => {
+  //   for (const iface of ifaces[ifname]) {
+  //     // Ignore IPv6 and 127.0.0.1
+  //     console.log(iface, "the address related...");
+  //     if (iface.family !== "IPv4" || iface.internal !== false) {
+  //       continue;
+  //     }
+  //     // Set the local ip to the first IPv4 address found and exit the loop
+  //     localIp = iface.address;
+  //     return;
+  //   }
+  // });
+  // return localIp;
+  const listenIps = [];
+  if (typeof window === "undefined") {
+    const os = require("os");
+    const networkInterfaces = os.networkInterfaces();
+    const ips = [];
+    if (networkInterfaces) {
+      for (const [key, addresses] of Object.entries(networkInterfaces)) {
+        addresses.forEach((address) => {
+          if (address.family === "IPv4") {
+            listenIps.push({ ip: address.address, announcedIp: null });
+          } else if (address.family === "IPv6" && address.address[0] !== "f") {
+            /* ignore link-local and other special ipv6 addresses.
+             * https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml
+             */
+            listenIps.push({ ip: address.address, announcedIp: null });
+          }
+        });
       }
-      // Set the local ip to the first IPv4 address found and exit the loop
-      localIp = iface.address;
-      return;
     }
-  });
-  return localIp;
+  }
+  if (listenIps.length === 0) {
+    listenIps.push({ ip: "127.0.0.1", announcedIp: null });
+  }
+  return listenIps;
 };
 
 connection.on("connection", async (socket) => {
@@ -210,16 +234,17 @@ connection.on("connection", async (socket) => {
     return new Promise(async (res, rej) => {
       try {
         const webRTcTransport_options = {
-          listenIps: [
-            // {
-            //   ip: "0.0.0.0",
-            //   announcedIp: getLocalIp(), // replace by public IP address.
-            // },
-            {
-              ip: "52.87.191.26",
-              announcedIp: null,
-            },
-          ],
+          // listenIps: [
+          //   // {
+          //   //   ip: "0.0.0.0",
+          //   //   announcedIp: getLocalIp(), // replace by public IP address.
+          //   // },
+          //   {
+          //     ip: "52.87.191.26",
+          //     announcedIp: null,
+          //   },
+          // ],
+          listenIps: getLocalIp(),
           initialAvailableOutgoingBitrate: 1000000,
           minimumAvailableOutgoingBitrate: 600000,
           stunServer: [{ urls: "stun:stun.l.google.com:19302" }],
