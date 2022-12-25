@@ -240,8 +240,8 @@ connection.on("connection", async (socket) => {
             //   announcedIp: getLocalIp(), // replace by public IP address.
             // },
             {
-              ip: "127.0.0.1",
-              announcedIp: "52.87.191.26",
+              ip: "52.87.191.26",
+              announcedIp: getLocalIp(),
             },
           ],
           // listenIps: getLocalIp(),
