@@ -236,14 +236,14 @@ connection.on("connection", async (socket) => {
       try {
         const webRTcTransport_options = {
           listenIps: [
-            {
-              ip: "0.0.0.0",
-              announcedIp: getLocalIp(), // replace by public IP address.
-            },
             // {
-            //   ip: "52.87.191.26",
-            //   announcedIp: getLocalIp(),
+            //   ip: "0.0.0.0",
+            //   announcedIp: getLocalIp(), // replace by public IP address.
             // },
+            {
+              ip: "52.87.191.26",
+              announcedIp: getLocalIp(),
+            },
           ],
           // listenIps: getLocalIp(),
           initialAvailableOutgoingBitrate: 1000000,
