@@ -419,27 +419,28 @@ function App() {
   const getLocalStream = () => {
     navigator.mediaDevices
       .getUserMedia({
-        // audio: true,
-        // video: {
-        //   width: {
-        //     min: 640,
-        //     max: 1920,
-        //   },
-        //   height: {
-        //     min: 400,
-        //     max: 1080,
-        //   },
-        // },
-        audio: {},
+        audio: true,
         video: {
-          deviceId: { exact: "id of logitech camera" },
-          frameRate: { ideal: 30 },
-          height: { ideal: 720 }, // drop down to 720p
-          width: { ideal: 1280 }, // drop down to 1280p
+          width: {
+            min: 640,
+            max: 1920,
+          },
+          height: {
+            min: 400,
+            max: 1080,
+          },
         },
+        // audio: {},
+        // video: {
+        //   deviceId: { exact: "id of logitech camera" },
+        //   frameRate: { ideal: 30 },
+        //   height: { ideal: 720 }, // drop down to 720p
+        //   width: { ideal: 1280 }, // drop down to 1280p
+        // },
       })
       .then(streamSuccess)
       .catch((err) => console.log(err.message));
+    
   };
 
   const mutemic = (e) => {
