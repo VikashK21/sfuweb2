@@ -235,6 +235,7 @@ connection.on("connection", async (socket) => {
     return new Promise(async (res, rej) => {
       try {
         const webRTcTransport_options = {
+          ip: "0.0.0.0",
           listenIps: [
             {
               ip: "0.0.0.0",
