@@ -131,8 +131,8 @@ const mediaCodecs = [
 ];
 
 const getLocalIp = () => {
-  // let localIp = "127.0.0.1";
-  let localIp = "0.0.0.0";
+  let localIp = "127.0.0.1";
+  // let localIp = "0.0.0.0";
   Object.keys(ifaces).forEach((ifname) => {
     for (const iface of ifaces[ifname]) {
       // Ignore IPv6 and 127.0.0.1
@@ -241,8 +241,8 @@ connection.on("connection", async (socket) => {
             //   announcedIp: getLocalIp(), // replace by public IP address.
             // },
             {
-              ip: "52.87.191.26",
-              announcedIp: getLocalIp(),
+              ip: "0.0.0.0",
+              announcedIp: "52.87.191.26",
             },
           ],
           // listenIps: getLocalIp(),
