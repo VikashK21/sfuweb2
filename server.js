@@ -158,10 +158,10 @@ const getLocalIp = () => {
     if (networkInterfaces) {
       for (const [key, addresses] of Object.entries(networkInterfaces)) {
         addresses.forEach((address) => {
-          if (address.family === "IPv4") {
+          if (address.family === "IPv4" && address.internal === false) {
             listenIps.push({
-              ip: address.address,
-              announcedIp: "52.87.191.26",
+              ip: "52.87.191.26",
+              announcedIp: address.address,
             });
           }
           //  else if (address.family === "IPv6" && address.address[0] !== "f") {
@@ -177,8 +177,6 @@ const getLocalIp = () => {
     // if (listenIps.length === 0) {
     //   listenIps.push({ ip: "127.0.0.1", announcedIp: "52.87.191.26" });
     // }
-  } else {
-    listenIps.push({ ip: "127.0.0.1", announcedIp: "52.87.191.26" });
   }
 
   console.log(listenIps, "the listenIps....");
