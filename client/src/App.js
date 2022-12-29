@@ -440,7 +440,6 @@ function App() {
       })
       .then(streamSuccess)
       .catch((err) => console.log(err.message));
-    
   };
 
   const mutemic = (e) => {
@@ -468,6 +467,10 @@ function App() {
       path: "/io/webrtc",
     });
 
+    // navigator.mediaDevices.getUserMedia =
+    //   navigator.mediaDevices.getUserMedia ||
+    //   navigator.webkitGetUserMedia ||
+    //   navigator.mozGetUserMedia;
     // console.log(selectedVid.current.srcObject, "the selected vid");
 
     socket.current.on("connection-success", ({ socketId }) => {
@@ -498,9 +501,11 @@ function App() {
         ),
       );
       // remove the video div element
-      setRemoteVideos(
-        remoteVideos.filter((videoData) => videoData[0] !== remoteProducerId),
-      );
+      setRemoteVideos([
+        ...remoteVideos.filter(
+          (videoData) => videoData[0] !== remoteProducerId,
+        ),
+      ]);
       console.log("removed or just sitting here....");
     });
   }, []);
@@ -559,7 +564,7 @@ function App() {
           backgroundColor: "orange",
         }}
       >
-        vikash kumar
+        VK
         {selectedVid && selectedVid}
       </div>
       <div
@@ -577,7 +582,9 @@ function App() {
           whiteSpace: "nowrap",
         }}
       >
-        {remoteVideos.length > 0 && remoteVideos.map((videoCre) => videoCre[1])}
+        {remoteVideos &&
+          remoteVideos.length > 0 &&
+          remoteVideos.map((videoCre) => videoCre[1])}
       </div>
 
       <br />

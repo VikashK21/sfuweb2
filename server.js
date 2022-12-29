@@ -79,7 +79,7 @@ const createWorker = async () => {
   worker = await mediasoup.createWorker({
     rtcMinPort: 40000,
     rtcMaxPort: 49999,
-    logLevel: "debug",
+    logLevel: "warn",
     logTags: [
       "info",
       "ice",
@@ -93,6 +93,9 @@ const createWorker = async () => {
       // 'simulcast',
       // 'svc'
     ],
+    // dtlsCertificateFile: "./ssl/cert.pem",
+    // dtlsPrivateKeyFile: "./ssl/keytmp.pem",
+
   });
   console.log(`worker pid ${worker.pid}`);
 
@@ -604,6 +607,7 @@ connection.on("connection", async (socket) => {
           (socketId) => socket.id !== socketId,
         ),
       };
+      
     } catch (err) {
       console.log(err.message);
     }
