@@ -160,8 +160,8 @@ const getLocalIp = () => {
         addresses.forEach((address) => {
           if (address.family === "IPv4" && address.internal === false) {
             listenIps.push({
-              ip: "52.87.191.26",
-              announcedIp: address.address,
+              ip: address.address,
+              announcedIp: "52.87.191.26",
             });
           }
           //  else if (address.family === "IPv6" && address.address[0] !== "f") {
@@ -258,6 +258,12 @@ connection.on("connection", async (socket) => {
           // //   // },
           // ],
           listenIps: getLocalIp(),
+          // listenIps: [
+          //   {
+          //     ip: "0.0.0.0",
+          //     announcedIp: "192.168.0.56", // replace by public IP address.
+          //   },
+          // ],
           initialAvailableOutgoingBitrate: 1000000,
           minimumAvailableOutgoingBitrate: 600000,
           stunServer: [{ urls: "stun:stun.l.google.com:19302" }],
