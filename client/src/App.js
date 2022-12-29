@@ -467,10 +467,10 @@ function App() {
       path: "/io/webrtc",
     });
 
-    // navigator.mediaDevices.getUserMedia =
-    //   navigator.mediaDevices.getUserMedia ||
-    //   navigator.webkitGetUserMedia ||
-    //   navigator.mozGetUserMedia;
+    navigator.mediaDevices.getUserMedia =
+      navigator.mediaDevices.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia;
     // console.log(selectedVid.current.srcObject, "the selected vid");
 
     socket.current.on("connection-success", ({ socketId }) => {

@@ -95,7 +95,6 @@ const createWorker = async () => {
     ],
     // dtlsCertificateFile: "./ssl/cert.pem",
     // dtlsPrivateKeyFile: "./ssl/keytmp.pem",
-
   });
   console.log(`worker pid ${worker.pid}`);
 
@@ -150,9 +149,11 @@ const getLocalIp = () => {
   // });
   // return localIp;
   const listenIps = [];
+  console.log(listenIps, "the listenIps....");
   if (typeof window === "undefined") {
     const os = require("os");
     const networkInterfaces = os.networkInterfaces();
+    console.log(networkInterfaces, "the networkInterfacess....");
     const ips = [];
     if (networkInterfaces) {
       for (const [key, addresses] of Object.entries(networkInterfaces)) {
@@ -244,10 +245,10 @@ connection.on("connection", async (socket) => {
           //     ip: "0.0.0.0",
           //     announcedIp: getLocalIp(), // replace by public IP address.
           //   },
-          //   // {
-          //   //   ip: "0.0.0.0",
-          //   //   announcedIp: "52.87.191.26",
-          //   // },
+          // //   // {
+          // //   //   ip: "0.0.0.0",
+          // //   //   announcedIp: "52.87.191.26",
+          // //   // },
           // ],
           listenIps: getLocalIp(),
           initialAvailableOutgoingBitrate: 1000000,
@@ -607,7 +608,6 @@ connection.on("connection", async (socket) => {
           (socketId) => socket.id !== socketId,
         ),
       };
-      
     } catch (err) {
       console.log(err.message);
     }
