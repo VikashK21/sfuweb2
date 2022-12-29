@@ -174,10 +174,13 @@ const getLocalIp = () => {
         });
       }
     }
-    if (listenIps.length === 0) {
-      listenIps.push({ ip: "127.0.0.1", announcedIp: "52.87.191.26" });
-    }
+    // if (listenIps.length === 0) {
+    //   listenIps.push({ ip: "127.0.0.1", announcedIp: "52.87.191.26" });
+    // }
+  } else {
+    listenIps.push({ ip: "127.0.0.1", announcedIp: "52.87.191.26" });
   }
+
   console.log(listenIps, "the listenIps....");
   return listenIps;
 };
@@ -216,7 +219,7 @@ connection.on("connection", async (socket) => {
     try {
       // create Router if it does not exist
       const router1 = await createRoom(roomName, socket.id);
-      console.log(router1, "from the Create room");
+      // console.log(router1, "from the Create room");
 
       peers[socket.id] = {
         socket,
@@ -268,9 +271,9 @@ connection.on("connection", async (socket) => {
         let transport = await router.createWebRtcTransport(
           webRTcTransport_options,
         );
-        console.log(
-          `transport id: ${transport.id}, creation of webrtctransport`,
-        );
+        // console.log(
+        //   `transport id: ${transport.id}, creation of webrtctransport`,
+        // );
 
         transport.on("dtlsstatechange", (dtlsState) => {
           if (dtlsState === "closed") {
@@ -279,9 +282,9 @@ connection.on("connection", async (socket) => {
         });
 
         transport.on("close", () => {
-          console.log("transport closed");
+          // console.log("transport closed");
         });
-        console.log(transport, "before seding to resolve");
+        // console.log(transport, "before seding to resolve");
         res(transport);
       } catch (err) {
         console.log(err, "error from the create webRtc Transport");
@@ -298,13 +301,13 @@ connection.on("connection", async (socket) => {
         { socketId: socket.id, transport, roomName, consumer },
       ];
 
-      console.log(transports, "added in the transport to transports");
+      // console.log(transports, "added in the transport to transports");
 
       peers[socket.id] = {
         ...peers[socket.id],
         transports: [...peers[socket.id].transports, transport.id],
       };
-      console.log(peers, "added in the transport to peers obj");
+      // console.log(peers, "added in the transport to peers obj");
     } catch (err) {
       console.log(err, "the addd Transprot");
     }
@@ -347,7 +350,7 @@ connection.on("connection", async (socket) => {
       const [producerTransport] = transports.filter(
         (transport) => transport.socketId === socketId && !transport.consumer,
       );
-      console.log(producerTransport, "extracting using square bracket...");
+      // console.log(producerTransport, "extracting using square bracket...");
       return producerTransport.transport;
     } catch (err) {
       console.log(err);
@@ -425,7 +428,7 @@ connection.on("connection", async (socket) => {
 
         informConsumers(roomName, socket.id, producer.id);
 
-        console.log("Producer ID: ", producer.id, producer.kind);
+        // console.log("Producer ID: ", producer.id, producer.kind);
 
         producer.on("transportclose", () => {
           console.log("transport for this producer closed ");
@@ -446,7 +449,7 @@ connection.on("connection", async (socket) => {
   // >>>>>>>>>>>>
 
   socket.on("transport-connect", ({ dtlsParameters }) => {
-    console.log("DTLS Params....", dtlsParameters);
+    // console.log("DTLS Params....", dtlsParameters);
     try {
       getTransport(socket.id).connect({ dtlsParameters });
     } catch (err) {
@@ -481,13 +484,13 @@ connection.on("connection", async (socket) => {
   socket.on(
     "transport-recv-connect",
     async ({ dtlsParameters, serverConsumerTransportId }) => {
-      console.log(
-        `DTLS Params recv-connect: ${dtlsParameters}`,
-        transports,
-        "ladladlaldfald",
-      );
+      // console.log(
+      //   `DTLS Params recv-connect: ${dtlsParameters}`,
+      //   transports,
+      //   "ladladlaldfald",
+      // );
       try {
-        console.log(serverConsumerTransportId, "the id");
+        // console.log(serverConsumerTransportId, "the id");
         let [consumerTransport] = transports.filter(
           (transportData) =>
             transportData.consumer &&
@@ -495,7 +498,7 @@ connection.on("connection", async (socket) => {
         );
         // console.log(consumerTransport, "its from here pre");
         consumerTransport = consumerTransport.transport;
-        console.log(consumerTransport, "its from here");
+        // console.log(consumerTransport, "its from here");
         await consumerTransport.connect({ dtlsParameters });
       } catch (err) {
         console.log(err, "the msg is from the transport-recv-connect");
@@ -527,7 +530,7 @@ connection.on("connection", async (socket) => {
           })
         ) {
           // transport can now consume and return a consumer
-          console.log(consumerTransport, "the consumersrslfdslfs");
+          // console.log(consumerTransport, "the consumersrslfdslfs");
           const consumer = await consumerTransport.consume({
             producerId: remoteProducerId,
             rtpCapabilities,
@@ -564,7 +567,7 @@ connection.on("connection", async (socket) => {
             serverConsumerId: consumer.id,
           };
 
-          console.log(params, "the params seding to callback");
+          // console.log(params, "the params seding to callback");
           // send the parameters to the client
           callback({ params });
         }
