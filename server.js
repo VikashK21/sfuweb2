@@ -160,7 +160,7 @@ const getLocalIp = () => {
         addresses.forEach((address) => {
           if (address.family === "IPv4" && address.internal === false) {
             listenIps.push({
-              ip: address.address,
+              ip: "192.168.0.56", //address.address,
               announcedIp: "52.87.191.26",
             });
           }
