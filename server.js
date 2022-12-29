@@ -161,7 +161,7 @@ const getLocalIp = () => {
           if (address.family === "IPv4" && address.internal === false) {
             listenIps.push({
               ip: "192.168.0.56", //address.address,
-              announcedIp: "52.87.191.26",
+              announcedIp: address.address,
             });
           }
           //  else if (address.family === "IPv6" && address.address[0] !== "f") {
