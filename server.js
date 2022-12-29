@@ -44,15 +44,15 @@ const options = {
   passphrase: "gsahdg",
 };
 
-// const httpsServer = https.createServer(options, app);
+const httpsServer = https.createServer(options, app);
 
-const httpsServer = app.listen(PORT, () =>
-  console.log(`Example app listening on port ${PORT}!`),
-);
-
-// httpsServer.listen(PORT, () =>
+// const httpsServer = app.listen(PORT, () =>
 //   console.log(`Example app listening on port ${PORT}!`),
 // );
+
+httpsServer.listen(PORT, () =>
+  console.log(`Example app listening on port ${PORT}!`),
+);
 
 io.listen(httpsServer);
 
@@ -160,8 +160,8 @@ const getLocalIp = () => {
         addresses.forEach((address) => {
           if (address.family === "IPv4" && address.internal === false) {
             listenIps.push({
-              ip: "192.168.0.56", //address.address,
-              announcedIp: address.address,
+              ip: address.address,
+              announcedIp: null,
             });
           }
           //  else if (address.family === "IPv6" && address.address[0] !== "f") {
