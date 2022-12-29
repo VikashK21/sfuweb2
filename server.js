@@ -159,21 +159,24 @@ const getLocalIp = () => {
       for (const [key, addresses] of Object.entries(networkInterfaces)) {
         addresses.forEach((address) => {
           if (address.family === "IPv4") {
-            listenIps.push({ ip: address.address, announcedIp: null });
-            return listenIps;
-          } else if (address.family === "IPv6" && address.address[0] !== "f") {
-            /* ignore link-local and other special ipv6 addresses.
-             * https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml
-             */
-            listenIps.push({ ip: address.address, announcedIp: null });
-            return listenIps;
+            listenIps.push({
+              ip: address.address,
+              announcedIp: "52.87.191.26",
+            });
           }
+          //  else if (address.family === "IPv6" && address.address[0] !== "f") {
+          //   /* ignore link-local and other special ipv6 addresses.
+          //    * https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml
+          //    */
+          //   listenIps.push({ ip: address.address, announcedIp: "52.87.191.26" });
+          //   return listenIps;
+          // }
         });
       }
     }
-  }
-  if (listenIps.length === 0) {
-    listenIps.push({ ip: "127.0.0.1", announcedIp: null });
+    if (listenIps.length === 0) {
+      listenIps.push({ ip: "127.0.0.1", announcedIp: "52.87.191.26" });
+    }
   }
   console.log(listenIps, "the listenIps....");
   return listenIps;
