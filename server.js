@@ -160,11 +160,13 @@ const getLocalIp = () => {
         addresses.forEach((address) => {
           if (address.family === "IPv4") {
             listenIps.push({ ip: address.address, announcedIp: null });
+            return listenIps;
           } else if (address.family === "IPv6" && address.address[0] !== "f") {
             /* ignore link-local and other special ipv6 addresses.
              * https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml
              */
             listenIps.push({ ip: address.address, announcedIp: null });
+            return listenIps;
           }
         });
       }
