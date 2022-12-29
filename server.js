@@ -149,7 +149,7 @@ const getLocalIp = () => {
   // });
   // return localIp;
   const listenIps = [];
-  console.log(listenIps, "the listenIps....");
+
   if (typeof window === "undefined") {
     const os = require("os");
     const networkInterfaces = os.networkInterfaces();
@@ -173,6 +173,7 @@ const getLocalIp = () => {
   if (listenIps.length === 0) {
     listenIps.push({ ip: "127.0.0.1", announcedIp: null });
   }
+  console.log(listenIps, "the listenIps....");
   return listenIps;
 };
 
