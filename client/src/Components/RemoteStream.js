@@ -15,11 +15,11 @@ function RemoteStream({ videoStyle, frameStyle, params, consumer, bringToW }) {
   };
 
   useEffect(() => {
-    const { track } = consumer;
-    console.log(track, "the remote video from the RemoteStream");
+    const { _track } = consumer;
+    console.log(_track, "the remote video from the RemoteStream");
     if (params.kind === "audio") {
-      remoteAudio.current.srcObject = new MediaStream([track]);
-      console.log(track, "the remote audio from the RemoteStream");
+      remoteAudio.current.srcObject = new MediaStream([_track]);
+      console.log(_track, "the remote audio from the RemoteStream");
       // const stream = remoteAudio.current.srcObject
       //   .getTracks()
       //   .filter((track) => track.kind === "audio");
@@ -28,7 +28,7 @@ function RemoteStream({ videoStyle, frameStyle, params, consumer, bringToW }) {
       // });
       setAllow(true);
     }
-    remoteVideo.current.srcObject = new MediaStream([track]);
+    remoteVideo.current.srcObject = new MediaStream([_track]);
     run();
     // eslint-disable-next-line
   }, [consumer, params]);
