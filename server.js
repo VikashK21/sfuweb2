@@ -38,21 +38,21 @@ app.get("/meetinclub", (req, res, next) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 
-const options = {
-  key: fs.readFileSync("./ssl/keytmp.pem", "utf-8"),
-  cert: fs.readFileSync("./ssl/cert.pem", "utf-8"),
-  passphrase: "gsahdg",
-};
+// const options = {
+//   key: fs.readFileSync("./ssl/keytmp.pem", "utf-8"),
+//   cert: fs.readFileSync("./ssl/cert.pem", "utf-8"),
+//   passphrase: "gsahdg",
+// };
 
-const httpsServer = https.createServer(options, app);
+// const httpsServer = https.createServer(options, app);
 
-// const httpsServer = app.listen(PORT, () =>
-//   console.log(`Example app listening on port ${PORT}!`),
-// );
-
-httpsServer.listen(PORT, () =>
+const httpsServer = app.listen(PORT, () =>
   console.log(`Example app listening on port ${PORT}!`),
 );
+
+// httpsServer.listen(PORT, () =>
+//   console.log(`Example app listening on port ${PORT}!`),
+// );
 
 io.listen(httpsServer);
 
@@ -95,6 +95,7 @@ const createWorker = async () => {
     ],
     // dtlsCertificateFile: "./ssl/cert.pem",
     // dtlsPrivateKeyFile: "./ssl/keytmp.pem",
+    
   });
   console.log(`worker pid ${worker.pid}`);
 
