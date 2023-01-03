@@ -38,21 +38,21 @@ app.get("/meetinclub", (req, res, next) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 
-// const options = {
-//   key: fs.readFileSync("./ssl/keytmp.pem", "utf-8"),
-//   cert: fs.readFileSync("./ssl/cert.pem", "utf-8"),
-//   passphrase: "gsahdg",
-// };
+const options = {
+  key: fs.readFileSync("./ssl/keytmp.pem", "utf-8"),
+  cert: fs.readFileSync("./ssl/cert.pem", "utf-8"),
+  passphrase: "gsahdg",
+};
 
-// const httpsServer = https.createServer(options, app);
+const httpsServer = https.createServer(options, app);
 
-const httpsServer = app.listen(PORT, () =>
-  console.log(`Example app listening on port ${PORT}!`),
-);
-
-// httpsServer.listen(PORT, () =>
+// const httpsServer = app.listen(PORT, () =>
 //   console.log(`Example app listening on port ${PORT}!`),
 // );
+
+httpsServer.listen(PORT, "52.87.191.26", () =>
+  console.log(`Example app listening on port ${PORT}!`),
+);
 
 io.listen(httpsServer);
 
@@ -87,15 +87,15 @@ const createWorker = async () => {
       "rtp",
       "srtp",
       "rtcp",
-      // 'rtx',
-      // 'bwe',
-      // 'score',
-      // 'simulcast',
-      // 'svc'
+      "rtx",
+      "bwe",
+      "score",
+      "simulcast",
+      "svc",
+      "sctp",
     ],
     // dtlsCertificateFile: "./ssl/cert.pem",
     // dtlsPrivateKeyFile: "./ssl/keytmp.pem",
-    
   });
   console.log(`worker pid ${worker.pid}`);
 
@@ -128,6 +128,37 @@ const mediaCodecs = [
     mimeType: "video/VP8",
     clockRate: 90000,
     parameters: {
+      "x-google-start-bitrate": 1000,
+    },
+  },
+  {
+    kind: "video",
+    mimeType: "video/VP9",
+    clockRate: 90000,
+    parameters: {
+      "profile-id": 2,
+      "x-google-start-bitrate": 1000,
+    },
+  },
+  {
+    kind: "video",
+    mimeType: "video/h264",
+    clockRate: 90000,
+    parameters: {
+      "packetization-mode": 1,
+      "profile-level-id": "4d0032",
+      "level-asymmetry-allowed": 1,
+      "x-google-start-bitrate": 1000,
+    },
+  },
+  {
+    kind: "video",
+    mimeType: "video/h264",
+    clockRate: 90000,
+    parameters: {
+      "packetization-mode": 1,
+      "profile-level-id": "42e01f",
+      "level-asymmetry-allowed": 1,
       "x-google-start-bitrate": 1000,
     },
   },
@@ -247,18 +278,9 @@ connection.on("connection", async (socket) => {
     return new Promise(async (res, rej) => {
       try {
         const webRTcTransport_options = {
-          // ip: "0.0.0.0",
-          // listenIps: [
-          //   {
-          //     ip: "0.0.0.0",
-          //     announcedIp: getLocalIp(), // replace by public IP address.
-          //   },
-          // //   // {
-          // //   //   ip: "0.0.0.0",
-          // //   //   announcedIp: "52.87.191.26",
-          // //   // },
-          // ],
-          listenIps: getLocalIp(),
+          listenIps: getLocalIp() || [
+            { ip: "0.0.0.0", announcedIp: "52.87.191.26" },
+          ],
           // listenIps: [
           //   {
           //     ip: "0.0.0.0",
