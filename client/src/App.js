@@ -47,7 +47,9 @@ function App() {
   // const [audioParams, setAudioParams] = useState({});
   // const [videoParams, setVideoParams] = useState({ params });
   let consumingTransports = [];
+  const [consumingTrn, setConsumingTrn] = useState([]);
   let consumerTransports = [];
+  const [consumerTrn, setConsumerTrn] = useState([]);
   let audioProducer;
   let videoProducer;
   // eslint-disable-next-line
@@ -89,18 +91,31 @@ function App() {
           rtpParameters: params.rtpParameters,
         });
 
-        consumerTransports.push({
-          consumerTransport,
-          serverConsumerTransportId: params.id,
-          producerId: remoteProducerId,
-          consumer,
-        });
+        // consumerTransports.push({
+        //   consumerTransport,
+        //   serverConsumerTransportId: params.id,
+        //   producerId: remoteProducerId,
+        //   consumer,
+        // });
+        setConsumerTrn((pre) => [
+          ...pre,
+          {
+            consumerTransport,
+            serverConsumerTransportId: params.id,
+            producerId: remoteProducerId,
+            consumer,
+          },
+        ]);
 
         // create a new dive element for the new consumer media....
         setRemoteVideos((pre) => {
           let allow = true;
           for (let see of pre) {
-            if (see[0] === remoteProducerId) return (allow = false);
+            if (see[0] === remoteProducerId && allow) {
+              allow = false;
+            } else {
+              break;
+            }
           }
 
           const videoF = (params, consumer) => (
@@ -167,12 +182,10 @@ function App() {
 
   const signalNewConsumerTransport = async (remoteProducerId) => {
     // check if we are already consuming the remoteProducerId
-    if (
-      consumingTransports.length > 0 &&
-      consumingTransports.includes(remoteProducerId)
-    )
+    if (consumingTrn.length > 0 && consumingTrn.includes(remoteProducerId))
       return;
-    consumingTransports.push(remoteProducerId);
+    setConsumingTrn((pre) => [...pre, remoteProducerId]);
+    // consumingTransports.push(remoteProducerId);
 
     await socket.current.emit(
       "createWebRtcTransport",
@@ -420,6 +433,7 @@ function App() {
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
+        // video: false,
         video: {
           width: {
             min: 640,
@@ -488,25 +502,36 @@ function App() {
       console.log(remoteProducerId, "the producer got closed");
       // server notification is recieved when a producer is closed
       // we need to close the client-side consumer and associated transport
-      const producerToClose = consumerTransports.find(
+      // const producerToClose = consumerTransports.find(
+      //   (transportData) => transportData.producerId === remoteProducerId,
+      // );
+      const producerToClose2 = consumerTrn.find(
         (transportData) => transportData.producerId === remoteProducerId,
       );
-      producerToClose.consumerTransport.close();
-      producerToClose.consumer.close();
+      // producerToClose.consumerTransport.close();
+      // producerToClose.consumer.close();
+      producerToClose2.consumerTransport.close();
+      producerToClose2.consumer.close();
 
       // remove the consumer transport from the list
-      consumerTransports.push(
-        ...consumerTransports.filter(
+      // consumerTransports.push(
+      //   ...consumerTransports.filter(
+      //     (transportData) => transportData.producerId !== remoteProducerId,
+      //   ),
+      // );
+      setConsumingTrn((pre) => [
+        ...pre.filter(
           (transportData) => transportData.producerId !== remoteProducerId,
         ),
-      );
+      ]);
       // remove the video div element
-      setRemoteVideos([
+      setRemoteVideos((pre) => [
         ...remoteVideos.filter(
           (videoData) => videoData[0] !== remoteProducerId,
         ),
       ]);
       console.log("removed or just sitting here....");
+      window.prompt("something which I don");
     });
   }, []);
 

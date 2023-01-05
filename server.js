@@ -50,7 +50,7 @@ const httpsServer = https.createServer(options, app);
 //   console.log(`Example app listening on port ${PORT}!`),
 // );
 
-httpsServer.listen(PORT, "52.87.191.26", () =>
+httpsServer.listen(PORT, () =>
   console.log(`Example app listening on port ${PORT}!`),
 );
 
@@ -624,15 +624,22 @@ connection.on("connection", async (socket) => {
       consumers = consumers.filter(
         (consumerData) => consumerData.socketId !== socket.id,
       );
-      producers = producers.filter(
-        (producerData) => producerData.socketId !== socket.id,
-      );
+      let remoteProducerId;
+      producers = producers.filter((producerData) => {
+        if (producerData.socketId === socket.id) {
+          remoteProducerId = producerData.producer.id;
+        } else {
+          return producerData;
+        }
+      });
       transports = transports.filter(
         (transportData) => transportData.socketId !== socket.id,
       );
       // consumers = removeItems(consumers, socket.id, "consumer");
       // producers = removeItems(producers, socket.id, "producer");
       // transports = removeItems(transports, socket.id, "transport");
+      console.log(remoteProducerId, 'sending to client...');
+      socket.emit("producer-closed", { remoteProducerId });
 
       const { roomName } = peers[socket.id];
       delete peers[socket.id];
