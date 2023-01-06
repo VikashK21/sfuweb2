@@ -113,7 +113,7 @@ function App() {
           for (let see of pre) {
             if (see[0] === remoteProducerId && allow) {
               allow = false;
-            } else {
+            } else if (!allow) {
               break;
             }
           }
@@ -170,6 +170,8 @@ function App() {
             setSelectedVid(() => sl);
           }
 
+          // const pre2 = [...pre, [remoteProducerId, video]];
+
           if (allow) return [...pre, [remoteProducerId, video]];
           return [...pre];
         });
@@ -184,7 +186,10 @@ function App() {
     // check if we are already consuming the remoteProducerId
     if (consumingTrn.length > 0 && consumingTrn.includes(remoteProducerId))
       return;
-    setConsumingTrn((pre) => [...pre, remoteProducerId]);
+    setConsumingTrn(
+      (pre) => [...pre, remoteProducerId],
+      // const pre2 = [...pre, remoteProducerId];
+    );
     // consumingTransports.push(remoteProducerId);
 
     await socket.current.emit(
