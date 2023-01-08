@@ -79,7 +79,7 @@ const createWorker = async () => {
   worker = await mediasoup.createWorker({
     rtcMinPort: 40000,
     rtcMaxPort: 49999,
-    logLevel: "warn",
+    logLevel: "error",
     logTags: [
       "info",
       "ice",
@@ -293,6 +293,8 @@ connection.on("connection", async (socket) => {
           enableUdp: true,
           enableTcp: true,
           preferUdp: true,
+          preferTcp: true,
+          enableSctp: true
         };
 
         let transport = await router.createWebRtcTransport(
@@ -638,7 +640,7 @@ connection.on("connection", async (socket) => {
       // consumers = removeItems(consumers, socket.id, "consumer");
       // producers = removeItems(producers, socket.id, "producer");
       // transports = removeItems(transports, socket.id, "transport");
-      console.log(remoteProducerId, 'sending to client...');
+      console.log(remoteProducerId, "sending to client...");
       socket.emit("producer-closed", { remoteProducerId });
 
       const { roomName } = peers[socket.id];
